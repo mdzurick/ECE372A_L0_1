@@ -1,5 +1,5 @@
 /* 
- * File:   config.h
+ * File:   config.hb
  * Author: gvanhoy
  * Description: This file sets the configuration bits for the PIC32MX. This is 
  * important for debugging and using the clock correctly.

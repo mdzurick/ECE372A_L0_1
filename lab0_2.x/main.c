@@ -19,11 +19,12 @@
 #define DOWN 0
 
 #define TIMER1_FLAG IFS0bits.T1IF
+#define TIMER2_FLAG IFS0bits.T2IF
 
 /**************************************************/
 
 typedef enum stateTypeEnum {
-    led0, led1, led2
+    led0, led1, led2, debouncePress, debounceRelease, debouncePress
 } stateType;
 
 /**************************************************/
@@ -50,6 +51,12 @@ int main() {
             case led2:
                 turnOnLED(2);
                 break;
+            case debouncePress:
+                break;
+            case debouncePress:
+                break;
+            case waitRelease:
+                break;
         }
     }
     
@@ -60,14 +67,13 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() {
     
     TIMER1_FLAG = DOWN;
     
-    if (state == led0) {
-        state = led1;
-    }
-    else if (state == led1) {
-        state = led2;
-    }
-    else if (state == led2) {
-        state = led0;
-    }
     
+    
+}
+
+void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt() {
+    
+    TIMER2_FLAG = DOWN;
+    
+
 }
