@@ -1,7 +1,7 @@
 /* 
  * File:   timer.h
- * Author: gvanhoy
- *
+ * Author: mdzurick
+ * Description: Header file to do with timers.
  * Created on August 27, 2015, 3:26 PM
  */
 
