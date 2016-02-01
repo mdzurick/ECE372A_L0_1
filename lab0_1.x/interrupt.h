@@ -1,51 +1,44 @@
 /* 
- * File:   config.h
+ * File:   interrupt.h
  * Author: gvanhoy
- * Description: This file sets the configuration bits for the PIC32MX. This is 
- * important for debugging and using the clock correctly.
- * Created on August 27, 2015, 12:17 PM
+ *
+ * Created on August 27, 2015, 3:32 PM
  */
 
-#ifndef CONFIG_H
-#define	CONFIG_H
+#ifndef INTERRUPT_H
+#define	INTERRUPT_H
 
-#include <xc.h>
+#define FLASH_SPEED_HZ              30000000 //Max Flash speed
+#define PB_BUS_MAX_FREQ_HZ          80000000 //Max Peripheral bus speed
+#define SYS_CFG_WAIT_STATES         0x00000001 //SYSTEMConfig wait states
+#define SYS_CFG_PB_BUS              0x00000002 //SYSTEMConfig pb bus
+#define SYS_CFG_PCACHE              0x00000004 //SYSTEMConfig cache
+#define SYS_CFG_ALL                 0xFFFFFFFF //SYSTEMConfig All
 
-// DEVCFG3
-// USERID = No Setting
-#pragma config FSRSSEL = PRIORITY_7     // Shadow Register Set Priority Select (SRS Priority 7)
-#pragma config PMDL1WAY = ON            // Peripheral Module Disable Configuration (Allow only one reconfiguration)
-#pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow only one reconfiguration)
-#pragma config FUSBIDIO = OFF            // USB USID Selection (Controlled by the USB Module)
-#pragma config FVBUSONIO = OFF           // USB VBUS ON Selection (Controlled by USB Module)
+#define mBMXDisableDRMWaitState()   (BMXCONCLR = _BMXCON_BMXWSDRM_MASK)
+#define mCheGetCon()                CHECON
+#define CHE_CONF_PF_ALL             (3 << _CHECON_PREFEN_POSITION)
+#define mCheConfigure(val)          (CHECON = (val))
+#define OSC_PB_DIV_8                (3 << _OSCCON_PBDIV_POSITION)
+#define OSC_PB_DIV_4                (2 << _OSCCON_PBDIV_POSITION)
+#define OSC_PB_DIV_2                (1 << _OSCCON_PBDIV_POSITION)
+#define OSC_PB_DIV_1                (0 << _OSCCON_PBDIV_POSITION)
+#define mSYSTEMUnlock(intStat, dmaSusp) do{intStat=INTDisableInterrupts(); dmaSusp=DmaSuspend(); \
+                    SYSKEY = 0, SYSKEY = 0xAA996655, SYSKEY = 0x556699AA;}while(0)
+#define mSYSTEMLock(intStat, dmaSusp)   do{SYSKEY = 0x33333333; DmaResume(dmaSusp); INTRestoreInterrupts(intStat);}while(0)
 
-// DEVCFG2
-#pragma config FPLLIDIV = DIV_2         // PLL Input Divider (2x Divider)
-#pragma config FPLLMUL = MUL_20         // PLL Multiplier (20x Multiplier)
-#pragma config UPLLIDIV = DIV_12        // USB PLL Input Divider (12x Divider)
-#pragma config UPLLEN = OFF             // USB PLL Enable (Disabled and Bypassed)
-#pragma config FPLLODIV = DIV_8         // System PLL Output Clock Divider (PLL Divide by 1)
+void enableInterrupts();
+void disableInterrupts();
+extern unsigned int SYSTEMConfigWaitStatesAndPB(unsigned int sys_clock);
+extern unsigned int SYSTEMConfigPerformance(unsigned int sys_clock);
+extern unsigned int SYSTEMConfigPB(unsigned int sys_clock);
+int DmaSuspend(void);
+void DmaResume(int susp);
+extern void OSCSetPBDIV(unsigned int oscPbDiv);
+void __attribute__((nomips16))  INTRestoreInterrupts(unsigned int status);
+unsigned int __attribute__((nomips16))  INTEnableInterrupts(void);
+unsigned int __attribute__((nomips16)) INTDisableInterrupts(void);
+void __attribute__ ((nomips16)) CheKseg0CacheOn();
 
-// DEVCFG1
-#pragma config FNOSC = PRIPLL           // Oscillator Selection Bits (Primary Osc w/PLL (XT+,HS+,EC+PLL))
-#pragma config FSOSCEN = OFF             // Secondary Oscillator Enable (Enabled)
-#pragma config IESO = ON                // Internal/External Switch Over (Enabled)
-#pragma config POSCMOD = XT             // Primary Oscillator Configuration (XT osc mode)
-#pragma config OSCIOFNC = OFF           // CLKO Output Signal Active on the OSCO Pin (Disabled)
-#pragma config FPBDIV = DIV_8           // Peripheral Clock Divisor (Pb_Clk is Sys_Clk)
-#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor Selection (Clock Switch Disable, FSCM Disabled)
-#pragma config WDTPS = PS1048576        // Watchdog Timer Postscaler (1:1048576)
-#pragma config WINDIS = OFF             // Watchdog Timer Window Enable (Watchdog Timer is in Non-Window Mode)
-#pragma config FWDTEN = OFF             // Watchdog Timer Enable (WDT Disabled (SWDTEN Bit Controls))
-#pragma config FWDTWINSZ = WINSZ_25     // Watchdog Timer Window Size (Window Size is 25%)
-
-// DEVCFG0
-#pragma config DEBUG = OFF               // Background Debugger Enable (Debugger is Enabled)
-#pragma config JTAGEN = OFF              // JTAG Enable (JTAG Port Enabled)
-#pragma config ICESEL = ICS_PGx2        // ICE/ICD Comm Channel Select (Communicate on PGEC2/PGED2)
-#pragma config PWP = OFF                // Program Flash Write Protect (Disable)
-#pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
-#pragma config CP = OFF                 // Code Protect (Protection Disabled)
-
-#endif	/* CONFIG_H */
+#endif	/* INTERRUPT_H */
 

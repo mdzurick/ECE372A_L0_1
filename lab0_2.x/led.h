@@ -1,7 +1,7 @@
 /* 
  * File:   led.h
- * Author: gvanhoy
- *
+ * Author: mdzurick
+ * Description: Header file to do with LEDs.
  * Created on August 27, 2015, 3:15 PM
  */
 

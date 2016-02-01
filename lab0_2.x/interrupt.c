@@ -1,6 +1,6 @@
 /* 
  * File:   interrupt.c
- * Author: gvanhoy
+ * Author: mdzurick
  *
  * Created on August 27, 2015, 3:32 PM
  */

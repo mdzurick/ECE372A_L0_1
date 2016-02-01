@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: mdzurickh
+ * Author: mdzurick
  * Description: lab 0.
  * Created on August 27, 2015, 10:14 AM
  */
