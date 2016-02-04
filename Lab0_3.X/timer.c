@@ -26,7 +26,7 @@
 #define TMR1_TURNON T1CONbits.TON
 #define TMR1_INTERRUPT_FLAG IFS0bits.T1IF
 #define TMR1_INTERRUPT IEC0bits.T1IE
-#define TMR1_INTERRUPT_PRIORITY IPIC1bits.T1IP
+#define TMR1_INTERRUPT_PRIORITY IPC1bits.T1IP
 
 #define TMR2_REG TMR2
 #define TMR2_PRESCALAR T2CONbits.TCKPS
@@ -34,7 +34,7 @@
 #define TMR2_PERIOD_REG PR2
 #define TMR2_TURNON T2CONbits.TON
 #define TMR2_INTERRUPT IEC0bits.T2IE
-#define TMR2_INTERRUPT_PRIORITY IPIC1bits.T2IP
+#define TMR2_INTERRUPT_PRIORITY IPC2bits.T2IP
 
 /**************************************************/
 
@@ -76,12 +76,12 @@ void delayMs(int ms) {
     
     TMR2_REG = 0; // Reset the count value to 0.
     
-    TIMER2_FLAG = DOWN;
+    TMR2_INTERRUPT_FLAG = DOWN;
     TMR2_TURNON = TIMER_ON;
     
-    while (TIMER2_FLAG == DOWN) {}
+    while (TMR2_INTERRUPT_FLAG == DOWN) {}
     
-    TIMER2_FLAG = DOWN;
+    TMR2_INTERRUPT_FLAG = DOWN;
     
     TMR2_TURNON = TIMER_OFF;
     
@@ -91,7 +91,7 @@ void delayMs(int ms) {
 void startTimer1() {
     
     TMR1_REG = 0;
-    TIMER1_FLAG = DOWN;
+    TMR1_INTERRUPT_FLAG = DOWN;
     TMR1_TURNON = TIMER_ON;
     
 }
